@@ -10,7 +10,7 @@
 
 <body>
     <div class="container">
-        <form class="form" method="post">
+        <form class="form">
             <div class="form-header">
                 <span>Form Interface for POST, PUT & DELETE</span>
             </div>
@@ -18,32 +18,35 @@
                 <label for="action" id="action">Action</label>
                 <div class="form-radio-button-actions">
                     <label>PUT</label>
-                    <input type="radio" name="actions" id="put" value="PUT" required>
+                    <input type="radio" name="action" id="put" value="PUT" required>
 
                     <label>POST</label>
-                    <input type="radio" name="actions" id="post" value="POST" required>
+                    <input type="radio" name="action" id="post" value="POST" required>
 
                     <label>DELETE</label>
-                    <input type="radio" name="actions" id="delete" value="DELETE" required>
+                    <input type="radio" name="action" id="delete" value="DELETE" required>
                 </div>
             </div>
             <div class="select-currency">
-                <label for="currency">Curr :</label>
-                <select name="currency" id="currency" required>
+                <label for="cur">Curr :</label>
+                <select name="cur" id="cur" required>
                     <option value="">Select Currency</option>
-                    <option>USD</option>
-                    <option>ZAR</option>
+                    <option value="USD">USD</option>
+                    <option value="ZAR">ZAR</option>
                 </select>
             </div>
             <div class="submit-button">
-                <input id="button" type="submit" value="Submit">
+                <input id="button" type="submit" onclick="submitForm()" value="Submit">
             </div>
         </form>
         <div class="response-area">
             <label for="response">Response XML</label>
-            <textarea name="response" id="" cols="35" rows="5" placeholder="Response"></textarea>
+            <!-- <span id="response"></span> -->
+            <textarea name="response" id="response" cols="35" rows="5" placeholder="Response"></textarea>
         </div>
     </div>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="index.js"></script>
 
 </html>
