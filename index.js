@@ -2,7 +2,6 @@ function submitForm() {
     let requestMethod = $("input[name='action']:checked").val();
     let symbol = $('#cur').val();
 
-
     if (requestMethod && symbol) {
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
