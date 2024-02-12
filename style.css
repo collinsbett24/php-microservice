@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&display=swap');
+
+* {
+    margin: auto;
+    padding: 0px;
+    /* box-sizing: border-box; */
+    line-height: 2rem;
+    font-family: 'Philosopher', sans-serif;
+}
+
+body {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container {
+    width: fit-content;
+    border: ridge;
+    border-radius: 5px;
+    padding: 2rem;
+}
+
+.container .form .form-header {
+    width: fit-content;
+    color: red;
+    font-weight: bolder;
+}
+
+.container .form .form-radio-button {
+    display: flex;
+    margin: 10px 0 10px 0;
+}
+
+.form-radio-button-actions {
+    width: fit-content;
+}
+
+input {
+    padding: 5px;
+}
+
+#action {
+    width: fit-content;
+    font-weight: bolder;
+}
+
+select {
+    width: 70%;
+    padding: 3px;
+}
+
+#button {
+    width: 100%;
+    background-color: rgb(23, 61, 83);
+    border-radius: 6px;
+    border: 1rem;
+    opacity: 0.7;
+    color: white;
+    font-weight: bold;
+}
+
+#button:hover {
+    opacity: 1;
+}
+
+.response-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.response-area label {
+    text-decoration: underline;
+    font-weight: bold;
+
+}
+
+.response-area .select-currency {
+    margin: 10px 0 10px 0;
+}
+
+.container .form .submit-button {
+    padding: 1rem;
+    display: flex;
+    align-content: center;
+
+}

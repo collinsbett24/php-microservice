@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Conversion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <form class="form" method="post">
+            <div class="form-header">
+                <span>Form Interface for POST, PUT & DELETE</span>
+            </div>
+            <div class="form-radio-button">
+                <label for="action" id="action">Action</label>
+                <div class="form-radio-button-actions">
+                    <label>PUT</label>
+                    <input type="radio" name="actions" id="put" value="PUT" required>
+
+                    <label>POST</label>
+                    <input type="radio" name="actions" id="post" value="POST" required>
+
+                    <label>DELETE</label>
+                    <input type="radio" name="actions" id="delete" value="DELETE" required>
+                </div>
+            </div>
+            <div class="select-currency">
+                <label for="currency">Curr :</label>
+                <select name="currency" id="currency" required>
+                    <option value="">Select Currency</option>
+                    <option>USD</option>
+                    <option>ZAR</option>
+                </select>
+            </div>
+            <div class="submit-button">
+                <input id="button" type="submit" value="Submit">
+            </div>
+        </form>
+        <div class="response-area">
+            <label for="response">Response XML</label>
+            <textarea name="response" id="" cols="35" rows="5" placeholder="Response"></textarea>
+        </div>
+    </div>
+</body>
+
+</html>
