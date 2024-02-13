@@ -3,7 +3,7 @@ class Response{
     function jsonToXml($data,$action, $xml = null) {
         header('Content-Type: application/xml');
         if ($xml === null) {
-            $xml = new SimpleXMLElement('<action xmlns="http://example.com/namespace"/>');
+            $xml = new SimpleXMLElement('<action />');
         }
         foreach ($data as $key => $value) {
             if (is_array($value)) {
@@ -18,10 +18,11 @@ class Response{
     }
 
     function jsonResponse($xmlString){
-        $xmlObject = simplexml_load_string($xmlString);
-        $jsonString = json_encode($xmlObject, JSON_PRETTY_PRINT);
-        // Output the JSON
-        return $jsonString;
+        // Convert to JSON
+        header('Content-Type: application/json');
+        $jsonData = json_encode($xmlString, JSON_PRETTY_PRINT);
+        // Output JSON
+        return $jsonData;
     }
     
     function xmlerrorResponse($errorCode, $errorMessage){

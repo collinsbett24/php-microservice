@@ -1,6 +1,5 @@
 <?php
-require 'filter.php';
-
+require_once('classes.php');
 class Currency{
     public $endpoint;
     public $access_key;
@@ -49,5 +48,24 @@ class Currency{
         $data = json_decode($jsonData, true);
         // Access the desired data
         return $data;
+    }
+    function fetch_per_currency($symbols){
+        $run = new Response();
+        $ch = curl_init('http://data.fixer.io/api/latest?access_key='.$this->access_key.'&base=EUR&symbols='.$symbols);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Store the data:
+        $json = curl_exec($ch);
+        // Check for cURL errors
+        if ($json === false) {
+            $errorCode=2500;
+            $errorMessage = "Error in service";
+            $xmlErrorResponse=$run->xmlerrorResponse($errorCode, $errorMessage);
+            echo $xmlErrorResponse;
+            return;
+        }
+        curl_close($ch);
+        // Decode JSON response:
+        $exchangeRate = json_decode($json, true);
+        return $exchangeRate;
     }
 }

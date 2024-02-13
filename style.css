@@ -77,11 +77,18 @@ select {
 
 }
 
+.response-area #response {
+    font-weight: bolder;
+    font-style: italic;
+    color: rgb(207, 74, 74);
+}
+
 .response-area .select-currency {
     margin: 10px 0 10px 0;
 }
 
-.container .form .submit-button {
+.container.submit-button {
+    margin-top: 2rem;
     padding: 1rem;
     display: flex;
     align-content: center;

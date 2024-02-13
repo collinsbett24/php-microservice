@@ -5,8 +5,19 @@ function submitForm() {
     if (requestMethod && symbol) {
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
-            document.getElementById("response").innerHTML = this.responseText;
+            // Use responseXML instead of responseText
+            const xmlDocument = this.responseXML;
+
+            if (xmlDocument) {
+                const rawXml = this.responseText;
+
+                const formattedXml = formatXml(rawXml);
+                document.getElementById("response").innerHTML = formattedXml;
+            } else {
+                alert('Invalid XML response.');
+            }
         };
+
         // Encode the symbol value before appending it to the URL
         const encodedSymbol = encodeURIComponent(symbol);
         const url = "assignment.php?symbol=" + encodedSymbol;
@@ -16,4 +27,20 @@ function submitForm() {
     } else {
         alert('Please select both action and currency.');
     }
+}
+
+function formatXml(xmlString) {
+    // Create a new DOMParser
+    const parser = new DOMParser();
+
+    // Parse the XML string
+    const xmlDoc = parser.parseFromString(xmlString, 'application/xml');
+
+    // Create a new XMLSerializer
+    const serializer = new XMLSerializer();
+
+    // Serialize the parsed XML document back to a formatted XML string
+    const formattedXml = serializer.serializeToString(xmlDoc);
+
+    return formattedXml;
 }
