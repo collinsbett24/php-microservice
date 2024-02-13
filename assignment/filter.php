@@ -13,14 +13,10 @@ class Filter{
      function filter_rates(){
         // Filter values
         $filterValues = ["AUD","BRL","CAD","CHF","CNY","DKK","EUR","GBP","HKD","HUF","INR","JPY","MXN","MYR","NOK","NZD","PHP","RUB","SEK","SGD","THB","TRY","USD","ZAR"];
-
-        function filter_by_currency(){
-            $filteredRates = array_intersect_key($this->rates['rates'], array_flip($filterValues));
-            $jsonData = json_encode($filteredRates, JSON_PRETTY_PRINT);
-            // Write the JSON data to a .json file
-            $file = 'filtered_rates.json';
-            file_put_contents($file, $jsonData);
-        }
+        $filteredRates = array_intersect_key($this->rates['rates'], array_flip($filterValues));
+        $jsonData = json_encode($filteredRates, JSON_PRETTY_PRINT);
+        $file = 'filtered_data.json';
+        file_put_contents($file, $jsonData);
     }
 
     function filterByCountry(){

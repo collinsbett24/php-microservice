@@ -1,6 +1,7 @@
 <?php
 require_once('classes.php');
 class requestMethods{
+ 
     function get(){
             // Retrieve parameters from the GET request
             $from = isset($_GET['from']) ? $_GET['from'] : null;
@@ -10,9 +11,38 @@ class requestMethods{
 
             if(!empty($from)&&!empty($to) &&!empty($amnt)){
                 $data =  new Currency();
-                $run = new Response();
-                // echo $errorResponse->jsonResponse($responseData);
+                $run = new Response();       
+                
+                if(is_float($amnt)){
+                    $errorCode =1300;
+                    $errorMessage = "Currency amount must be a decimal number";
+                    $error = ['error'=>[
+                        'code'=>$errorCode,
+                        'msg'=>$errorMessage
+                    ]];
+                    $xml = new SimpleXMLElement('<conv type="tttt" />');
+                    // Convert JSON to XML   
+                    $xmlString = $run->jsonToXml($error,'GET',$xml);     
+                    // Echo the XML response
+                    header('Content-Type: application/xml');
+                    echo $xmlString;
+                    return;
+                }
+                
+                $allrates = $data->getRecordsFromFile();
+                $filter = new Filter($allrates, $from, $to);
+                $filters =  $filter->filterByCountry();
 
+                $fromData = ['code'=>$from, 'curr'=>$from, 'loc'=>$from,'amnt'=>$amnt];
+                $newAmount = number_format($amnt * $filters['rate'],2);
+
+                $toData = ['code'=>$to, 'curr'=>$to, 'loc'=>$to,'amnt'=>$newAmount];
+                    $responseData = [
+                        'at'=>$filters['at'], 
+                        'rate'=>number_format($filters['rate'],2),
+                        'from'=>$fromData,
+                        'to'=>$toData
+                    ];
                 switch ($format) {
                     case (($format !='json') && ($format !='xml') && ($format!=null)):
                         $errorCode =1400;
@@ -22,6 +52,7 @@ class requestMethods{
                             'code'=>$errorCode,
                             'msg'=>$errorMessage
                         ]];
+                       
                         $xml = new SimpleXMLElement('<conv type="tttt" />');
                         // Convert JSON to XML   
                         $xmlString = $run->jsonToXml($error,'GET',$xml);     
@@ -30,40 +61,14 @@ class requestMethods{
                         echo $xmlString;
                         break;
                     case 'json':
-                        echo $errorResponse->jsonResponse();
+                        echo $run->jsonResponse($responseData);
                         break;
-                    
                     default:
-                        $allrates = $data->getRecordsFromFile();
-                        // print_r($allrates);
-                        $filter = new Filter($allrates, $from, $to);
-                        $filters =  $filter->filterByCountry();
-        
-                        $fromData = ['code'=>$from, 'curr'=>$from, 'loc'=>'USA','amnt'=>$amnt];
-                        $newAmount = number_format($amnt * $filters['rate'],2);
-        
-                        $toData = ['code'=>$to, 'curr'=>$to, 'loc'=>'Kenya','amnt'=>$newAmount];
-                            $responseData = [
-                                'at'=>$filters['at'], 
-                                'rate'=>number_format($filters['rate'],2),
-                                'from'=>$fromData,
-                                'to'=>$toData
-                            ];
                             $xml = new SimpleXMLElement('<conv />');
                             $response = new Response();
                             echo $response->jsonToXml($responseData, '',$xml); 
                         break;
                 }
-                // if($format==='json'){
-                    
-                //     echo 'json response';
-                // }
-                // else if ($format !='json' && $format !='xml' && $format!=null) {
-                        
-                // }
-                // else {
-                     
-                // }
             }
             else{
                 $errorCode =1000;
@@ -74,6 +79,11 @@ class requestMethods{
                         'code'=>$errorCode,
                         'msg'=>$errorMessage
                     ]];
+
+                    if($format==='json'){
+                        echo $run->jsonResponse($error);
+                        return;
+                    }
                     $xml = new SimpleXMLElement('<conv  type="tttt" />');
                     // Convert JSON to XML   
                     $xmlString = $run->jsonToXml($error,'GET',$xml);     
@@ -115,12 +125,12 @@ class requestMethods{
         echo $xmlString;    
     }
     function post(){
-        $symbols = isset($_POST['symbol']) ? $_POST['symbol'] : 'XCD';
+        $symbols = isset($_GET['symbol']) ? $_GET['symbol'] : 'XCD';
         $data =  new Currency();
         $allrates = $data->getRecordsFromFile();
         
         // print_r($allrates);
-        $filter = new Filter($allrates, $symbols, null);
+        $filter = new Filter($allrates, $symbols, 'EUR');
         $filters =  $filter->filterByCountry();
         $fromData = [
             'at' => $filters['at'],
