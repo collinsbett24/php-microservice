@@ -1,8 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /atwd1/assignment/
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ assignment.php?url=$1 [QSA,L]
+    RewriteRule ^$ assignment.php [L]
+    RewriteRule ^update/$ assignment.php [L]
 </IfModule>

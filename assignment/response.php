@@ -1,5 +1,6 @@
 <?php
 class Response{
+    //method for creating xml responses
     function jsonToXml($data,$action, $xml = null) {
         header('Content-Type: application/xml');
         if ($xml === null) {
@@ -16,7 +17,7 @@ class Response{
         }
         return $xml->asXML();
     }
-
+    //method for creating json responses
     function jsonResponse($xmlString){
         // Convert to JSON
         header('Content-Type: application/json');
@@ -25,6 +26,7 @@ class Response{
         return $jsonData;
     }
     
+    //method for creating error responses
     function xmlerrorResponse($errorCode, $errorMessage){
          // Set the content type to XML
          header('Content-Type: application/xml');

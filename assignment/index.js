@@ -1,4 +1,6 @@
+//method to test the get API
 function testGetMethod() {
+    //get values from form
     let format = $("input[name='format']:checked").val();
     let from = $('#from').val();
     let to = $('#to').val();
@@ -10,6 +12,7 @@ function testGetMethod() {
             const xmlDocument = this.responseText;
 
             if (xmlDocument) {
+                //display the data to the HTML text area
                 const rawXml = this.responseText;
                 document.getElementById("response").innerHTML = rawXml;
             } else {
@@ -22,8 +25,8 @@ function testGetMethod() {
         const encodedFrom = encodeURIComponent(from);
         const encodedTo = encodeURIComponent(to);
         const encodedAmnt = encodeURIComponent(amnt);
-        const url = "assignment.php?from=" + encodedFrom + "&to=" + encodedTo + "&amnt=" + encodedAmnt + "&format=" + encodedFormat;
-
+        const url = "./?from=" + encodedFrom + "&to=" + encodedTo + "&amnt=" + encodedAmnt + "&format=" + encodedFormat;
+        //initiate the request
         xhttp.open('GET', url);
         xhttp.send();
     } else {
@@ -31,9 +34,14 @@ function testGetMethod() {
     }
 
 }
+
+//method to test put, post and delete
 function submitForm() {
+
+    //get values from input fields
     let requestMethod = $("input[name='action']:checked").val();
     let symbol = $('#cur').val();
+    let action = requestMethod.toLowerCase();
 
     if (requestMethod && symbol) {
         const xhttp = new XMLHttpRequest();
@@ -42,6 +50,7 @@ function submitForm() {
             const xmlDocument = this.responseText;
 
             if (xmlDocument) {
+                //display the data to the HTML text area
                 const rawXml = this.responseText;
 
                 const formattedXml = formatXml(rawXml);
@@ -53,9 +62,9 @@ function submitForm() {
 
         // Encode the symbol value before appending it to the URL
         const encodedSymbol = encodeURIComponent(symbol);
-        const url = "../assignment.php?symbol=" + encodedSymbol;
-
-        xhttp.open(requestMethod, url);
+        const url = "update/?cur=" + encodedSymbol + "&action=" + action;
+        //initiate the request to the php files
+        xhttp.open(`${requestMethod}`, url);
         xhttp.send();
     } else {
         alert('Please select both action and currency.');

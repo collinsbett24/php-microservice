@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <div class="update-button">
-            <a href="./update">Update</a>
+            <a href="update.php">Test Update Methods</a>
         </div>
         <form class="form">
             <div class="form-header">
