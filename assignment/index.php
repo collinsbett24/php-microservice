@@ -12,6 +12,9 @@
 
 <body>
     <div class="container">
+        <div class="loading">
+            <img id ="loadingImage"  src="loader.gif" alt="loading">
+        </div>
         <div class="update-button">
             <a href="update.php">Test Update Methods</a>
         </div>

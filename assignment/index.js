@@ -1,5 +1,6 @@
 //method to test the get API
 function testGetMethod() {
+    $('#loadingImage').show();
     //get values from form
     let format = $("input[name='format']:checked").val();
     let from = $('#from').val();
@@ -12,10 +13,12 @@ function testGetMethod() {
             const xmlDocument = this.responseText;
 
             if (xmlDocument) {
+                $('#loadingImage').hide();
                 //display the data to the HTML text area
                 const rawXml = this.responseText;
                 document.getElementById("response").innerHTML = rawXml;
             } else {
+                $('#loadingImage').hide();
                 alert('Invalid XML response.');
             }
         };
@@ -37,7 +40,7 @@ function testGetMethod() {
 
 //method to test put, post and delete
 function submitForm() {
-
+    $('#loadingImage').show();
     //get values from input fields
     let requestMethod = $("input[name='action']:checked").val();
     let symbol = $('#cur').val();
@@ -48,14 +51,15 @@ function submitForm() {
         xhttp.onload = function () {
             // Use responseXML instead of responseText
             const xmlDocument = this.responseText;
-
             if (xmlDocument) {
+                $('#loadingImage').hide();
                 //display the data to the HTML text area
                 const rawXml = this.responseText;
 
                 const formattedXml = formatXml(rawXml);
                 document.getElementById("response").innerHTML = formattedXml;
             } else {
+                $('#loadingImage').hide();
                 alert('Invalid XML response.');
             }
         };

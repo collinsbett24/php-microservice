@@ -94,3 +94,20 @@ select {
     align-content: center;
 
 }
+
+.loading #loadingImage {
+    width: 200px;
+    height: 100px;
+    display: none;
+    /* Hide the loading image by default */
+    position: fixed;
+    /* Position the loading image relative to the viewport */
+    top: 50%;
+    /* Position the loading image at the vertical center of the viewport */
+    left: 50%;
+    /* Position the loading image at the horizontal center of the viewport */
+    transform: translate(-50%, -50%);
+    /* Center the loading image precisely */
+    z-index: 9999;
+    /* Set a high z-index to make sure the loading image is on top of other elements */
+}

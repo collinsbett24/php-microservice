@@ -4,7 +4,6 @@ require_once('classes.php');
 
 // Define a class named requestMethods
 class requestMethods{
- 
     // Define a method named get()
     function get(){
         // Retrieve parameters from the GET request
@@ -12,13 +11,11 @@ class requestMethods{
         $to = isset($_GET['to']) ? $_GET['to'] : null;
         $amnt = isset($_GET['amnt']) ? $_GET['amnt'] : null;
         $format = isset($_GET['format']) ? $_GET['format'] : null;
-
         // Check if required parameters are not empty
         if(!empty($from) && !empty($to) && !empty($amnt)){
             // Create instances of Currency and Response classes
             $data = new Currency();
-            $run = new Response();       
-                
+            $run = new Response();             
             // Check if the amount is a float
             if(is_float($amnt)){
                 $errorCode = 1300;
@@ -38,6 +35,7 @@ class requestMethods{
                 
             // Retrieve currency rates from the file
             $allrates = $data->getRecordsFromFile();
+
             // Create a Filter instance to filter currencies
             $filter = new Filter($allrates, $from, $to);
             $filters = $filter->filterByCountry();
@@ -56,6 +54,7 @@ class requestMethods{
                 'from' => $fromData,
                 'to' => $toData
             ];
+           
 
             // Check the requested format and generate the response accordingly
             switch ($format) {
@@ -113,29 +112,37 @@ class requestMethods{
         $symbols = isset($_PUT['cur']) ? $_PUT['cur'] : 'USD';
         $fetchFromAPI = new Currency();
         $newRate = $fetchFromAPI->fetch_per_currency($symbols);
-        $data =  new Currency();
-        $allrates = $data->getRecordsFromFile();
-        $filter = new Filter($allrates, $symbols, 'EUR');
-        $oldrates =  $filter->filterByCountry();
-        $timestamp = date('Y-m-d H:i', $newRate['timestamp']);
-        $currentRate = number_format(1/$newRate['rates'][$symbols],5);
-        $oldRateValue = number_format($oldrates['rate'],5);
-        $response = [
-            'at'=>$timestamp,
-            'rate'=>$currentRate,
-            'old_rate'=>$oldRateValue,
-            'curr'=>[
-                'code'=>$symbols,
-                'name'=>$symbols,
-                'loc'=>$symbols
-                ]        
-            ];
-        $xml = new SimpleXMLElement('<action type="put" />');
-        // Convert JSON to XML   
-        $xmlString = $run->jsonToXml($response,'PUT',$xml);     
-        // Echo the XML response
-        header('Content-Type: application/xml');
-        echo $xmlString;    
+        if($newRate['success']==true){
+            $data =  new Currency();
+            $allrates = $data->getRecordsFromFile();
+            $filter = new Filter($allrates, $symbols, 'EUR');
+            $oldrates =  $filter->filterByCountry();
+            $timestamp = date('Y-m-d H:i', $newRate['timestamp']);
+            $currentRate = number_format(1/$newRate['rates'][$symbols],5);
+            $oldRateValue = number_format($oldrates['rate'],5);
+            $response = [
+                'at'=>$timestamp,
+                'rate'=>$currentRate,
+                'old_rate'=>$oldRateValue,
+                'curr'=>[
+                    'code'=>$symbols,
+                    'name'=>$symbols,
+                    'loc'=>$symbols
+                    ]        
+                ];
+                echo $currentRate;
+            $xml = new SimpleXMLElement('<action type="put"/>');
+            // Convert JSON to XML   
+            $xmlString = $run->jsonToXml($response,'PUT',$xml);     
+            // Echo the XML response
+            header('Content-Type: application/xml');
+            echo $xmlString;
+        }else{
+            $error = ['error'=>['code'=>1500, 'message'=>$newRate['error']]];
+            $xml = new SimpleXMLElement('<action type="tttt" />');
+            $xmlString = $run->jsonToXml($error,'DELETE',$xml);
+            echo $xmlString;
+        }    
     }
     function post(){
         $symbols = isset($_GET['cur']) ? $_GET['cur'] : 'XCD';
@@ -152,7 +159,6 @@ class requestMethods{
                 'loc' => $symbols,
             ],
         ];
-
         $xml = new SimpleXMLElement('<action type="post" />');
         $run = new Response();
         $xmlString = $run->jsonToXml($fromData,'POST',$xml);

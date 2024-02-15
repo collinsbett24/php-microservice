@@ -8,31 +8,29 @@ class Currency{
         $this->endpoint ='latest';
         $this->access_key = 'bdde04235f768d651583501989dc578e';
     }
-
     //method to fetch currencies
     function fetch_currency(){
         // Initialize CURL:
         $ch = curl_init('http://data.fixer.io/api/'.$this->endpoint.'?access_key='.$this->access_key.'');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
         // Store the data:
         $json = curl_exec($ch);
         curl_close($ch);
-        
         // Decode JSON response:
         $exchangeRates = json_decode($json, true);
+        $exchangeRates;
         $filter = new Currency();
         $filter->save_to_file($exchangeRates);
     }
     //method to save currencies to json file
     function save_to_file($data){
-        if($data['success']===false){
+        if($data['error']){
             $errorCode =1500;
             $errorMessage = "Error in service";
             $run = new Response();
             $error = ['error'=>[
                 'code'=>$errorCode,
-                'msg'=>$errorMessage
+                'msg'=>$data['error']
             ]];
             $xml = new SimpleXMLElement('<conv  type="tttt" />');
             // Convert JSON to XML   
@@ -40,35 +38,36 @@ class Currency{
             // Echo the XML response
             header('Content-Type: application/xml');
             echo $xmlString;
+            return;
         }
         else{
             $jsonData = json_encode($data, JSON_PRETTY_PRINT);
             // Write the JSON data to a .json file
             $file = 'filtered_data.json';
             $save = file_put_contents($file, $jsonData);
-
             if($save){
-                return "File updated successfully";
+                return true;
             }
             else{
-                return "Failed to save";
+                return $data;
             }     
         }   
     }
-    //methhod to fetch all currencies from json file
+    //method to fetch all currencies from json file
     function getRecordsFromFile(){
         $jsonFilePath = 'filtered_data.json';
         // Get JSON data from the file
-        $jsonData = file_get_contents($jsonFilePath);
-        
+        $jsonData = file_get_contents($jsonFilePath);      
         // Decode JSON data into a PHP array
         $data = json_decode($jsonData, true);
         $timestamp = $data['timestamp'];
         $formattedDate = date('Y-m-d H:i:s', $timestamp);
         $curreny = new Currency();
-        if($curreny->timeDifference($formattedDate)){
-            echo($curreny->fetch_currency());
-            $curreny->getRecordsFromFile();
+        if($curreny->timeDifference($formattedDate)==true){
+            $resp = $curreny->fetch_currency();
+            if($resp){
+                $curreny->getRecordsFromFile();
+            }
         }
         // Access the desired data
         return $data;
@@ -81,13 +80,6 @@ class Currency{
         // Store the data:
         $json = curl_exec($ch);
         // Check for cURL errors
-        if ($json === false) {
-            $errorCode=2500;
-            $errorMessage = "Error in service";
-            $xmlErrorResponse=$run->xmlerrorResponse($errorCode, $errorMessage);
-            echo $xmlErrorResponse;
-            return;
-        }
         curl_close($ch);
         // Decode JSON response:
         $exchangeRate = json_decode($json, true);
@@ -106,6 +98,6 @@ class Currency{
         $hours = $timeDifference->h;
         $minutes = $timeDifference->i;
         $seconds = $timeDifference->s;
-        return $hours <= 2 ? false: true;
+        return $hours <= 2 ? false :true;
     }
 }
